@@ -1,0 +1,29 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1em;
+    padding: .75em;
+
+    border: 0.5px solid rgba(255, 255, 255, 0.50);
+    border-radius: 1em;
+    background: rgba(255, 255, 255, 0.36);
+}
+
+.divIcon {
+    display: flex;
+    align-items: center;
+}
+
+.icon {
+    background-color: #fff;
+    padding: .5em .75em;
+    border-radius: .5em;
+    margin-right: 1em;
+}
+
+.details {
+    font-family: var(--main-font);
+    color: var(--font-color);
+    font-size: .85em;
+}

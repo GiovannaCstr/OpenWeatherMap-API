@@ -1,0 +1,7 @@
+@import '../../../global.css';
+
+.background {
+    background: linear-gradient(180deg, #FEE3BC 30%, #ada9a5 60%, #fff 100%);
+    padding: 2em;
+    height: 100vh;
+}
