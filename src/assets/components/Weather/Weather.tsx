@@ -2,8 +2,27 @@ import lupa from './img/lupa.svg';
 import menu from './img/menu.svg';
 import icone from './img/cludy.svg';
 import style from './Weather.module.css';
+import { useState, useEffect } from 'react';
+const apiKey = '654d7141b2184d23e322299a94e1059d';
 
 export default function Weather() {
+    const [latitude, setLatitude] = useState(0);
+    const [longitude, setLongitude] = useState(0);
+    const [weather, setWeather] = useState({});
+
+    useEffect(() => {
+        navigator.geolocation.getCurrentPosition((position) => {
+            setLatitude(position.coords.latitude);
+            setLongitude(position.coords.longitude);
+        })
+    }),([])
+       
+    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`)
+    .then((response) => response.json())
+    .then(result => {
+        setWeather(result)
+    })
+
     return (
         <div>
             <div className={style.divWeather}>
