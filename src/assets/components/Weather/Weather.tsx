@@ -1,51 +1,117 @@
+import { useState, useEffect, ChangeEvent } from 'react';
 import lupa from './img/lupa.svg';
 import menu from './img/menu.svg';
-import icone from './img/cludy.svg';
-import style from './Weather.module.css';
-import { useState, useEffect } from 'react';
-const apiKey = '654d7141b2184d23e322299a94e1059d';
+import umbrella from './img/umbrella.svg';
+import wind from './img/wind.svg';
+import humidity from './img/humidity.svg';
 
-export default function Weather() {
-    const [latitude, setLatitude] = useState(0);
-    const [longitude, setLongitude] = useState(0);
-    const [weather, setWeather] = useState({});
+export default function Weather(): JSX.Element {
+    const [city, setCity] = useState<string>("");
+    const [latitude, setLatitude] = useState<number>(0);
+    const [longitude, setLongitude] = useState<number>(0);
+    const [data, setData] = useState({
+        name: "",
+        main : {
+            feels_like: 0,
+            humidity: 0,
+            temp: 0
+        },
+        sys: {
+            country: "",
+        },
+        weather: [
+            {
+                icon: "",
+            }
+        ],
+        wind: {
+            speed: 0
+        }, 
+        rain: {
+            rain: 0
+        }
+
+    });
 
     useEffect(() => {
         navigator.geolocation.getCurrentPosition((position) => {
             setLatitude(position.coords.latitude);
             setLongitude(position.coords.longitude);
         })
-    }),([])
-       
-    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`)
-    .then((response) => response.json())
-    .then(result => {
-        setWeather(result)
-    })
+    },[])
+    
+    useEffect(() => {
+        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${import.meta.env.VITE_REACT_APP_API_KEY}`)
+        .then((response) => response.json())
+        .then(result => {
+            setData(result)
+            console.log(result)
+        })
+    },[latitude, longitude])
+    console.log(data)
+
+    const hoje: Date = new Date();
+    const day: number = hoje.getDate();
+    const month: number = hoje.getMonth();
+    const monthNames: string[] = [
+        'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
+        'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'
+      ];
+      const monthName: string = monthNames[month];
+
+    const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        const inputCity = e.target.value;
+        setCity(inputCity)
+    }
 
     return (
-        <div>
-            <div className={style.divWeather}>
-                <button className={style.searchBtn}>
-                    <img src={lupa} alt='' className={style.icon}/>
-                </button>
-                <input type="text" className={style.searchInput} />
-                <img src={menu} alt='' className={style.icon}/>
-            </div>
-
-            <div className={style.divLocal}>
-                <h2 className={style.local}>São Paulo,</h2>
-                <h2 className={style.local}>Brazil</h2>
-                <span className={style.localDate}>Tue, jun 30</span>
-            </div>
-            
-            <div className={style.divIcon}>
-                <span><img src={icone} alt="" /></span>
+        <main className='bg-blue-500'>
+            <section>
                 <div>
-                    <h1 className={style.temperature}>19º</h1>
-                    <span className={style.climate}>Rainy</span>
+                    <button>
+                        <img src={lupa} alt=''/>
+                    </button>
+                    <input type="text" value={city} onChange={() => changeHandler}/>
+                    <img src={menu} alt=''/>
                 </div>
-            </div>
-        </div>
+
+                <div>
+                    <h2>{data.name},</h2>
+                    <h2>{data.sys.country}</h2>
+                    <span>{monthName}, {day}</span>
+                </div>
+                
+                <div>
+                    <span><img src={`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`} alt="" /></span>
+                    <div>
+                        <h1>{data.main.temp.toFixed(0)}º</h1>
+                        <span>Rainy</span>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <div>
+                    <div>
+                        <img src={umbrella} alt=""/>
+                        <p>Rain probability</p>
+                    </div>
+                    <p>{data.main.feels_like}%</p>
+                </div>
+                <div>
+                    <div>
+                        <img src={wind} alt=""/>
+                        <p>Wind</p>
+                    </div>
+                    <p>{data.wind.speed}km/h</p>
+                </div>
+                <div>
+                    <div>
+                        <img src={humidity} alt=""/>
+                        <p>Humidity</p>
+                    </div>
+                    <p>{data.main.humidity}%</p>
+                </div>
+            </section>
+        </main>
     )
 }

@@ -1,12 +1,12 @@
-import ShowWeather from "./assets/components/ShowWeather/ShowWeather"
+import Weather from "./assets/components/Weather/Weather";
 
 function App() {
 
   return (
     <>
-      <ShowWeather/>
+      <Weather/>
     </>
   )
 }
 
-export default App
+export default App;
