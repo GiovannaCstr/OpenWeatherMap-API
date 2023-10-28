@@ -65,7 +65,7 @@ export default function Weather(): JSX.Element {
     }
 
     return (
-        <main className='bg-blue-500'>
+        <main className='bg-gradient-to-b from-bg-yellow text-font-gray'>
             <section>
                 <div>
                     <button>
