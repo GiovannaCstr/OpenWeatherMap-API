@@ -48,7 +48,6 @@ export default function Weather(): JSX.Element {
             console.log(result)
         })
     },[latitude, longitude])
-    console.log(data)
 
     const hoje: Date = new Date();
     const day: number = hoje.getDate();
@@ -65,48 +64,48 @@ export default function Weather(): JSX.Element {
     }
 
     return (
-        <main className='bg-gradient-to-b from-bg-yellow text-font-gray'>
+        <main className='bg-gradient-to-b from-bg-yellow text-font-gray p-8'>
             <section>
-                <div>
+                <div className='flex justify-between'>
                     <button>
                         <img src={lupa} alt=''/>
                     </button>
-                    <input type="text" value={city} onChange={() => changeHandler}/>
+                    <input className='w-3/4 rounded-xl' type="text" value={city} onChange={() => changeHandler}/>
                     <img src={menu} alt=''/>
                 </div>
 
-                <div>
-                    <h2>{data.name},</h2>
-                    <h2>{data.sys.country}</h2>
-                    <span>{monthName}, {day}</span>
+                <div className='py-10'>
+                    <h2 className='text-4xl'>{data.name},</h2>
+                    <h2 className='text-4xl'>{data.sys.country}</h2>
+                    <span className='text-xl text-gray-400'>{monthName}, {day}</span>
                 </div>
                 
-                <div>
-                    <span><img src={`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`} alt="" /></span>
+                <div className='flex justify-around items-center'>
+                    <span><img className='w-40' src={`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`} alt="" /></span>
                     <div>
-                        <h1>{data.main.temp.toFixed(0)}º</h1>
-                        <span>Rainy</span>
+                        <h1 className='text-6xl font-bold'>{data.main.temp.toFixed(0)}º</h1>
+                        <span className='text-xl'>Rainy</span>
                     </div>
                 </div>
             </section>
             <section>
-                <div>
-                    <div>
-                        <img src={umbrella} alt=""/>
+                <div className='flex justify-between items-center p-4 bg-gray-300 border-2 border-white rounded-xl mt-8 mb-4'>
+                    <div className='flex items-center font-bold'>
+                        <img className='bg-white p-2 w-10 h-10 rounded-xl mr-2' src={umbrella} alt=""/>
                         <p>Rain probability</p>
                     </div>
                     <p>{data.main.feels_like}%</p>
                 </div>
-                <div>
-                    <div>
-                        <img src={wind} alt=""/>
+                <div className='flex justify-between items-center p-4 bg-gray-300 border-2 border-white rounded-xl mb-4'>
+                    <div className='flex items-center font-bold'>
+                        <img className='bg-white p-2 w-10 h-10 rounded-xl mr-2' src={wind} alt=""/>
                         <p>Wind</p>
                     </div>
                     <p>{data.wind.speed}km/h</p>
                 </div>
-                <div>
-                    <div>
-                        <img src={humidity} alt=""/>
+                <div className='flex justify-between items-center p-4 bg-gray-300 border-2 border-white rounded-xl mb-4'>
+                    <div className='flex items-center font-bold'>
+                        <img className='bg-white p-2 w-10 h-10 rounded-xl mr-2' src={humidity} alt=""/>
                         <p>Humidity</p>
                     </div>
                     <p>{data.main.humidity}%</p>
