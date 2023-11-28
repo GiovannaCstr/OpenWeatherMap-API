@@ -70,7 +70,7 @@ export default function Weather(): JSX.Element {
                     <button>
                         <img src={lupa} alt=''/>
                     </button>
-                    <input className='w-3/4 rounded-xl' type="text" value={city} onChange={() => changeHandler}/>
+                    <input className='w-3/4 rounded-xl px-2' type="text" value={city} onChange={changeHandler}/>
                     <img src={menu} alt=''/>
                 </div>
 
