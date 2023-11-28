@@ -45,7 +45,6 @@ export default function Weather(): JSX.Element {
         .then((response) => response.json())
         .then(result => {
             setData(result)
-            console.log(result)
         })
     },[latitude, longitude])
 
@@ -66,30 +65,31 @@ export default function Weather(): JSX.Element {
     return (
         <main className='bg-gradient-to-b from-bg-yellow text-font-gray p-8'>
             <section>
-                <div className='flex justify-between'>
+                <div className='md:mx-40 flex justify-between'>
                     <button>
                         <img src={lupa} alt=''/>
                     </button>
                     <input className='w-3/4 rounded-xl px-2' type="text" value={city} onChange={changeHandler}/>
                     <img src={menu} alt=''/>
                 </div>
+                <div className='md:flex justify-evenly md:mb-20 md:mt-8'>
+                    <div className='py-10'>
+                        <h2 className='text-4xl'>{data.name},</h2>
+                        <h2 className='text-4xl'>{data.sys.country}</h2>
+                        <span className='text-xl text-gray-400'>{monthName}, {day}</span>
+                    </div>
 
-                <div className='py-10'>
-                    <h2 className='text-4xl'>{data.name},</h2>
-                    <h2 className='text-4xl'>{data.sys.country}</h2>
-                    <span className='text-xl text-gray-400'>{monthName}, {day}</span>
-                </div>
-                
-                <div className='flex justify-around items-center'>
-                    <span><img className='w-40' src={`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`} alt="" /></span>
-                    <div>
-                        <h1 className='text-6xl font-bold'>{data.main.temp.toFixed(0)}º</h1>
-                        <span className='text-xl'>Rainy</span>
+                    <div className='flex justify-around items-center'>
+                        <span><img className='w-40' src={`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`} alt="" /></span>
+                        <div>
+                            <h1 className='text-6xl font-bold'>{data.main.temp.toFixed(0)}º</h1>
+                            <span className='text-xl'>Rainy</span>
+                        </div>
                     </div>
                 </div>
             </section>
-            <section>
-                <div className='flex justify-between items-center p-4 bg-gray-300 border-2 border-white rounded-xl mt-8 mb-4'>
+            <section className='md:mx-40'>
+                <div className='flex justify-between items-center p-4 bg-gray-300 border-2 border-white rounded-xl mb-4'>
                     <div className='flex items-center font-bold'>
                         <img className='bg-white p-2 w-10 h-10 rounded-xl mr-2' src={umbrella} alt=""/>
                         <p>Rain probability</p>
