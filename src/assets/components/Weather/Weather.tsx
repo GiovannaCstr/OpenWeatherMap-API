@@ -43,11 +43,13 @@ export default function Weather(): JSX.Element {
     });
 
     useEffect(() => {
-        navigator.geolocation.getCurrentPosition((position) => {
-            setLatitude(position.coords.latitude);
-            setLongitude(position.coords.longitude);
-        })
-    },[])
+        if(local){
+            navigator.geolocation.getCurrentPosition((position) => {
+                setLatitude(position.coords.latitude);
+                setLongitude(position.coords.longitude);
+            })
+        }
+    },[local])
     
     useEffect(() => {
         fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${import.meta.env.VITE_REACT_APP_API_KEY}`)
@@ -58,32 +60,31 @@ export default function Weather(): JSX.Element {
         })
     },[latitude, longitude])
 
-
     const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         const inputCity = e.target.value;
         setCity(inputCity);
     }
 
-    city.trim().toLocaleLowerCase();
-    
-    useEffect(() => {
-        fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1000&appid=${import.meta.env.VITE_REACT_APP_API_KEY}`)
-        .then((response) => response.json())
-        .then(result => {
-            setSearch(result)
-            console.log(search)
-        })
-    }, [city])
-
-    const searchHandler = () => {
+    const searchHandler = async () => {
+        city.trim().toLocaleLowerCase();        
         setLocal(false);
+        
         if(!local) {
-            setLatitude(search[0].lat)
-            setLongitude(search[0].lon)
+            await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1000&appid=${import.meta.env.VITE_REACT_APP_API_KEY}`)
+            .then((response) => response.json())
+            .then(result => {
+                setSearch(result)
+
+                setLatitude(result[0].lat)
+                setLongitude(result[0].lon)
+            })
         }
         setCity("")
     }
     
+    const updateLocationHandler = () => {
+        setLocal(true);
+    }
 
     const hoje: Date = new Date();
     const day: number = hoje.getDate();
@@ -95,22 +96,32 @@ export default function Weather(): JSX.Element {
       const monthName: string = monthNames[month];
 
     return (
-        <main className='bg-gradient-to-b from-bg-yellow text-font-gray p-8'>
+        <main className='bg-gradient-to-b from-cyan-100 to-blue-500 text-font-gray p-8 h-screen'>
             <section>
                 <div className='md:mx-40 flex justify-between'>
                     <button onClick={searchHandler}>
                         <img src={lupa} alt=''/>
                     </button>
-                    <input className='w-3/4 rounded-xl px-2' type="text" value={city} onChange={changeHandler}/>
+                    <input className='w-3/4 rounded-xl px-2 py-1' type="text" placeholder="Procure por uma cidade..." value={city} onChange={changeHandler}/>
                     <img src={menu} alt=''/>
                 </div>
+                
                 <div className='md:flex justify-evenly md:mb-20 md:mt-8'>
                     <div className='py-10'>
-                        <h2 className='text-4xl'>{data.name},</h2>
-                        <h2 className='text-4xl'>{data.sys.country}</h2>
+                    {local ?
+                        <div>
+                            <h2 className='text-4xl'>{data.name},</h2>
+                            <h2 className='text-4xl'>{data.sys.country}</h2>
+                        </div>
+                    :
+                        <div>
+                            <h2 className='text-4xl'>{search[0].name},</h2>
+                            <h2 className='text-4xl'>{data.sys.country}</h2>
+                        </div>
+                    }
                         <span className='text-xl text-gray-400'>{monthName}, {day}</span>
+                        
                     </div>
-
                     <div className='flex justify-around items-center'>
                         <span><img className='w-40' src={`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`} alt="" /></span>
                         <div>
@@ -120,6 +131,9 @@ export default function Weather(): JSX.Element {
                     </div>
                 </div>
             </section>
+            <div className='md:mx-40 flex justify-end'>
+                <button onClick={updateLocationHandler} className='bg-white px-4 py-2 rounded-xl text-sm mt-8 mb-4 hover:bg-gray-200'>Ver local atual</button>
+            </div>
             <section className='md:mx-40'>
                 <div className='flex justify-between items-center p-4 bg-gray-300 border-2 border-white rounded-xl mb-4'>
                     <div className='flex items-center font-bold'>
