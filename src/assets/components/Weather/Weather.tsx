@@ -6,9 +6,18 @@ import wind from './img/wind.svg';
 import humidity from './img/humidity.svg';
 
 export default function Weather(): JSX.Element {
+    const [local, setLocal] = useState<boolean>(true);
     const [city, setCity] = useState<string>("");
     const [latitude, setLatitude] = useState<number>(0);
     const [longitude, setLongitude] = useState<number>(0);
+    const [search, setSearch] = useState([{
+        country: "",
+        lat: 0,
+        lon: 0,
+        name: "",
+        state: ""
+    }]);
+
     const [data, setData] = useState({
         name: "",
         main : {
@@ -45,8 +54,36 @@ export default function Weather(): JSX.Element {
         .then((response) => response.json())
         .then(result => {
             setData(result)
+            console.log(result)
         })
     },[latitude, longitude])
+
+
+    const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        const inputCity = e.target.value;
+        setCity(inputCity);
+    }
+
+    city.trim().toLocaleLowerCase();
+    
+    useEffect(() => {
+        fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1000&appid=${import.meta.env.VITE_REACT_APP_API_KEY}`)
+        .then((response) => response.json())
+        .then(result => {
+            setSearch(result)
+            console.log(search)
+        })
+    }, [city])
+
+    const searchHandler = () => {
+        setLocal(false);
+        if(!local) {
+            setLatitude(search[0].lat)
+            setLongitude(search[0].lon)
+        }
+        setCity("")
+    }
+    
 
     const hoje: Date = new Date();
     const day: number = hoje.getDate();
@@ -57,16 +94,11 @@ export default function Weather(): JSX.Element {
       ];
       const monthName: string = monthNames[month];
 
-    const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        const inputCity = e.target.value;
-        setCity(inputCity)
-    }
-
     return (
         <main className='bg-gradient-to-b from-bg-yellow text-font-gray p-8'>
             <section>
                 <div className='md:mx-40 flex justify-between'>
-                    <button>
+                    <button onClick={searchHandler}>
                         <img src={lupa} alt=''/>
                     </button>
                     <input className='w-3/4 rounded-xl px-2' type="text" value={city} onChange={changeHandler}/>
