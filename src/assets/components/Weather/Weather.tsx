@@ -1,6 +1,6 @@
 import { useState, useEffect, ChangeEvent } from 'react';
 import lupa from './img/lupa.svg';
-import menu from './img/menu.svg';
+import logo from './img/logo.svg';
 import umbrella from './img/umbrella.svg';
 import wind from './img/wind.svg';
 import humidity from './img/humidity.svg';
@@ -56,7 +56,6 @@ export default function Weather(): JSX.Element {
         .then((response) => response.json())
         .then(result => {
             setData(result)
-            console.log(result)
         })
     },[latitude, longitude])
 
@@ -99,15 +98,15 @@ export default function Weather(): JSX.Element {
         <main className='bg-gradient-to-b from-cyan-100 to-blue-500 text-font-gray p-8 h-screen'>
             <section>
                 <div className='md:mx-40 flex justify-between'>
+                    <img className='w-8' src={logo} alt=''/>
+                    <input className='w-3/4 rounded-xl px-2 py-1 outline-none' type="text" placeholder="Procure por uma cidade..." value={city} onChange={changeHandler}/>
                     <button onClick={searchHandler}>
                         <img src={lupa} alt=''/>
                     </button>
-                    <input className='w-3/4 rounded-xl px-2 py-1' type="text" placeholder="Procure por uma cidade..." value={city} onChange={changeHandler}/>
-                    <img src={menu} alt=''/>
                 </div>
                 
                 <div className='md:flex justify-evenly md:mb-20 md:mt-8'>
-                    <div className='py-10'>
+                    <div className='mt-16 mb-8'>
                     {local ?
                         <div>
                             <h2 className='text-4xl'>{data.name},</h2>
@@ -122,7 +121,7 @@ export default function Weather(): JSX.Element {
                         <span className='text-xl text-gray-400'>{monthName}, {day}</span>
                         
                     </div>
-                    <div className='flex justify-around items-center'>
+                    <div className='m-4 flex justify-around items-center'>
                         <span><img className='w-40' src={`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`} alt="" /></span>
                         <div>
                             <h1 className='text-6xl font-bold'>{data.main.temp.toFixed(0)}º</h1>
@@ -131,7 +130,7 @@ export default function Weather(): JSX.Element {
                     </div>
                 </div>
             </section>
-            <div className='md:mx-40 flex justify-end'>
+            <div className='md:mx-40 mt-8 flex justify-end'>
                 <button onClick={updateLocationHandler} className='bg-white px-4 py-2 rounded-xl text-sm mt-8 mb-4 hover:bg-gray-200'>Ver local atual</button>
             </div>
             <section className='md:mx-40'>
